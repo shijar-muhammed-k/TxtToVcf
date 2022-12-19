@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>TextToVcf</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://api.fontshare.com/v2/css?f[]=panchang@400&display=swap" rel="stylesheet">
+      <link href="https://api.fontshare.com/v2/css?f[]=boska@701&display=swap" rel="stylesheet">
+      </head>
+  <body background="{% static 'images/bg.jpg' %}">
+    <nav>
+          <div class="logo"><img src="{% static 'images/vcard.png' %}" alt=""> TextToVcf</div>
+          <input type="checkbox" id="checkbox">
+          <label for="checkbox" id="icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </label>
+          <ul>
+              <li><a href="https://www.instagram.com/mr_.malware/" target="_blank"><img src="{% static 'images/ig.png' %}" alt=""></a></li>
+              <li><a href="https://www.facebook.com/MR.MALWARE" target="_blank"><img src="{% static 'images/fb.png' %}" alt=""></a></li>
+          </ul>
+    </nav>
+    <div class="container">
+      <div class="cards">
+        <div class="card1">
+          <br><br>
+          This text to vcard converter is a tool that converts your text file(.TXT) into an electronic format(VCard/.VCF).
+          <br><br>
+          This is a very useful tool for people who use the phone book to find contact information. It can also be used to share contact information with someone else.
+          <br><br>
+          The text file should be in the Format of : First_Name, Last_Name, Email, Company, Title, Phone_Number, Address. (Leave space between commas whene informations are not availabe)
+          <br><br>
+          Eg: Example, ,demo@examole.com, ,Friend,9876543210,Place
+          <br>
+
+        </div>
+        <div class="card2">
+            <form class="form" method="post" action="/convert" id='form1' enctype="multipart/form-data">
+                {% csrf_token %}
+              <label for="file" class="drop-container">
+                <span class="drop-title">Drop files here</span>
+                or
+                <input type="file" id="file" name="textfile" accept=".txt" onchange="return fileValidation()" required>
+                <button type="submit" class='submit' form="form1" value="Submit">Upload</button>
+                <br>Only .txt file allowed. <br>
+              </label>
+            </form>
+                {% if msg == 1 %}
+                    <div class="error-msg">
+                      <i class="fa fa-times-circle"></i>
+                      File is empty.
+                    </div>
+                {% elif msg == 2 %}
+                    <div class="warning-msg">
+                        <i class="fa fa-warning"></i>
+                      File is in wrong format, please check the format.
+                    </div>
+                {% elif msg == 3 %}
+                    <div class="success-msg">
+                      <i class="fa fa-check"></i>
+                        Your file is ready to <a style="
+                        background-color: #434B62;
+                        color: white;
+                        padding: 14px 25px;
+                        border-radius: 15px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        " href="download/{{res}}/">Download</a>
+                    </div>
+                {% else %}
+                    {{pass}}
+                {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      ©2022. | Created By: Shijar Muhamemd. | All rights reserved.
+    </div>
+  </body>
+  <script>
+        function fileValidation() {
+            var fileInput =
+                document.getElementById('file');
+
+            var filePath = fileInput.value;
+
+            // Allowing file type
+            var allowedExtensions =
+                    /(\.txt)$/i;
+
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Invalid file type');
+                fileInput.value = '';
+                return false;
+            }
+
+        }
+    </script>
+</html>
