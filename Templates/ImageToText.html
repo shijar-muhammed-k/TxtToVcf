@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>ImageToText</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://api.fontshare.com/v2/css?f[]=panchang@400&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=boska@701&display=swap" rel="stylesheet">
+</head>
+
+<body background="{% static 'images/bg.jpg' %}">
+    <nav>
+        <div class="logo"><img src="{% static 'images/vcard.png' %}" alt=""> ImageToText</div>
+        <input type="checkbox" id="checkbox">
+        <label for="checkbox" id="icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </label>
+        <ul>
+            <li><a href="ToVcf">TextToVcf</a></li>
+            <li><a href="https://www.instagram.com/mr_.malware/" target="_blank"><img src="{% static 'images/ig.png' %}"
+                        alt=""></a></li>
+            <li><a href="https://www.facebook.com/MR.MALWARE" target="_blank"><img src="{% static 'images/fb.png' %}"
+                        alt=""></a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="cards">
+            <div class="card1">
+                <br><br>
+                This Image to Text converter is a tool that converts your image file into an text file in a csv format
+                for making VCard from TextToVcf.
+                <br><br>
+                The txt file will be in a format of, <br>
+                Number1,9876543210<br>
+                Number2,9998887776<br>
+                .<br>
+                .<br>
+                <br>
+                <form class="form" method="post" action="imageConvert" id='form1' enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="labelContainer">
+                        <label for="name">Name</label>
+                        <label for="number" class="NumberLabel ">Number To start</label>
+                    </div>
+                    <div class="inputContainer">
+                        <input type="text" name="name" placeholder="Number"><br>
+                        <input type="number" name="number" placeholder="1">    
+                    </div>
+                    <br><br>
+                </div>
+            <div class="card2">
+                <label for="file" class="drop-container">
+                    <span class="drop-title">Drop files here</span>
+                    or
+                    <input type="file" id="file" name="imagefile" onchange="return fileValidation()"
+                        required>
+                    <button type="submit" class='submit' form="form1" value="Submit">Upload</button>
+                    <br>Only image files are allowed. <br>
+                </label>
+                </form>
+                {% if msg == 1 %}
+                <div class="error-msg">
+                    <i class="fa fa-times-circle"></i>
+                    No number Found.
+                </div>
+                {% elif msg == 2 %}
+                <div class="warning-msg">
+                    <i class="fa fa-warning"></i>
+                    Sorry something went wrong. Please Try Again.
+                </div>
+                {% elif msg == 3 %}
+                <div class="success-msg">
+                    <i class="fa fa-check"></i>
+                    Total Count is {{Count}}<br>
+                    Your file is ready to <a style="
+                        background-color: #434B62;
+                        color: white;
+                        padding: 14px 25px;
+                        border-radius: 15px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        " href="txtdownload/{{res}}/">Download</a>
+                </div>
+                {% else %}
+                {{pass}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        ©2022. | Created By: Shijar Muhamemd. | All rights reserved.
+    </div>
+</body>
+<script>
+    function fileValidation() {
+        var fileInput =
+            document.getElementById('file');
+
+        var filePath = fileInput.value;
+
+        // Allowing file type
+        var allowedExtensions = new RegExp(/[^\s]+(.*?).(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$/);
+
+        if (!allowedExtensions.test(filePath)) {
+            alert('Invalid file type');
+            fileInput.value = '';
+            return false;
+        }
+
+    }
+</script>
+
+</html>

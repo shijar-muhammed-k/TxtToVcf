@@ -1,12 +1,19 @@
 import os
-
+import os
+from PIL import Image
+from pytesseract import pytesseract
+import re
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import txtfile
+from .models import txtfile, imagefile
 
 # Create your views here.
-def home(request):
+def index(request):
     return render(request, "index.html")
+
+
+def imageToTextHome(request):
+    return render(request, 'imageToText.html')
 
 
 def convert(request):
@@ -24,7 +31,7 @@ def convert(request):
         else:
             for data in values:
                 csv = data.split(",")
-                if len(csv) == 7:
+                if len(csv) == 2:
                     res = main(csv, path)
                     msg = 3
                 else:
@@ -52,15 +59,16 @@ def download(request, path):
 
 
 
+
 def main(csv, path):
 
         first_name   = csv[0]
-        last_name    = csv[1]
-        email        = csv[2]
-        company      = csv[3]
-        title        = csv[4]
-        phone_number = csv[5]
-        address      = csv[6]
+        last_name    = ''
+        email        = ''
+        company      = ''
+        title        = ''
+        phone_number = csv[1]
+        address      = ''
         vcf_file = path[:(len(path)-4)] +'.csv'
         vcard = make_vcard(first_name, last_name, company, title, phone_number, address, email)
         write_vcard(vcf_file, vcard)
@@ -93,3 +101,52 @@ def make_vcard(
 def write_vcard(f, vcard):
     with open(f, 'a') as f:
         f.writelines([l + '\n' for l in vcard])
+
+
+def imageconvert(request):
+    if request.method == "POST":
+        nums = []
+        con = imagefile()
+        path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        pytesseract.tesseract_cmd = path_to_tesseract
+        name = request.POST['name']
+        number = request.POST['number']
+        con.file = request.FILES['imagefile']
+        con.save()
+        text = pytesseract.image_to_string(str(con.file))
+        ma = re.findall('\d\d\d\d\d\s\d\d\d\d\d', text)
+        for i in ma:
+            nums.append(i.replace(' ', ""))
+        if(name == ''):
+            name = 'Number'
+        if(number == ''):
+            number = 1
+
+        res = r'Files\text.txt'
+        with open (res, 'a') as wr:
+            for i in nums:
+                wr.writelines(f'{name}{number},{i}\n')
+                number += 1
+        
+        count = len(nums)
+        if count == 0:
+            msg = 1
+        else:
+            msg = 3
+        
+        os.remove(str(con.file))
+        return render(request, 'imageToText.html', {'res' : res[6:], 'msg' : msg, 'Count' : count})
+    else:    
+        return render(request, 'imageToText.html')
+
+
+def txtdownload(request, path):
+    file = "Files/" + path
+    with open(file, 'r') as f:
+        data = f.read()
+
+    os.remove(file)
+
+    response = HttpResponse(data, content_type="application/text.txt")
+    response['Content-Disposition'] = "attachment; filename=text.txt"
+    return response

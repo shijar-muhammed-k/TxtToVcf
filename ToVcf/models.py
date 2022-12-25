@@ -8,3 +8,11 @@ class txtfile(models.Model):
 
     class Meta:
         db_table = "textfile"
+
+class imagefile(models.Model):
+    id = models.IntegerField(primary_key=True)
+    file = models.FileField(upload_to='Files')
+    txt = models.FileField(upload_to='Files')
+
+    class Meta:
+        db_table = "imagefiles"

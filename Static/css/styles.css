@@ -156,12 +156,32 @@ ul li a:hover{
   display: grid;
   justify-content: center;
   align-items: center;
-  height: 50%%;
+  height: 50px;
   padding: 0px;
   margin: 0px;
   background-color: #B0A8B9;
   margin: 0;
 
+}
+
+label {
+  margin: 9px;
+}
+
+label.NumberLabel {
+  width: 100px;
+}
+
+.labelContainer {
+  display: flex;
+  position: absolute;
+  float: left;
+  flex-direction: column;
+}
+
+.inputContainer {
+  position: relative;
+  float: right;
 }
 
 .drop-container {
@@ -241,3 +261,10 @@ input[type=file] {
   background-color: #FFBABA;
 }
 
+input[type="text"], input[type="number"] {
+  margin: 5px;
+  height: 20px;
+  border-radius: 7px;
+  border: 1px solid #725b5b;
+  padding: 5px;
+}
