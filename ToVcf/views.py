@@ -110,7 +110,7 @@ def imageconvert(request):
         path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         pytesseract.tesseract_cmd = path_to_tesseract
         name = request.POST['name']
-        number = int(request.POST['number'])
+        number = request.POST['number']
         con.file = request.FILES['imagefile']
         con.save()
         text = pytesseract.image_to_string(str(con.file))
@@ -121,6 +121,9 @@ def imageconvert(request):
             name = 'Number'
         if(number == ''):
             number = 1
+        else:
+            number = int(number)
+
 
         res = r'Files\text.txt'
         with open (res, 'a') as wr:
